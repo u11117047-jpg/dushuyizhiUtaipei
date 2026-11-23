@@ -1,0 +1,1603 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>獨庶一幟 DUSHU YIZHI｜臺北市立大學 × 三峽庶民美術館 聯名品牌</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://unpkg.com/lucide@0.460.0/dist/umd/lucide.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --moss-deep: #263115;
+      --moss: #36451e;
+      --moss-mid: #4e5e31;
+      --sage: #738254;
+      --washi: #f3efe6;
+      --washi-light: #faf8f3;
+      --washi-warm: #e8e2d3;
+      --ink: #1a1c15;
+      --ink-muted: #525747;
+      --teal-accent: #215b63;
+      --ochre-accent: #c8962e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', 'Noto Sans TC', sans-serif;
+      background-color: var(--washi);
+      color: var(--ink);
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-serif-tc {
+      font-family: 'Noto Serif TC', serif;
+    }
+
+    /* Subtle washi paper grain overlay */
+    .washi-texture {
+      background-color: var(--washi);
+      background-image:
+        radial-gradient(rgba(54, 69, 30, 0.035) 1px, transparent 0),
+        radial-gradient(rgba(26, 28, 21, 0.025) 1px, transparent 0);
+      background-size: 28px 28px;
+      background-position: 0 0, 14px 14px;
+    }
+
+    .moss-texture {
+      background-color: var(--moss-deep);
+      background-image:
+        radial-gradient(rgba(243, 239, 230, 0.04) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+
+    /* Scroll progress bar */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--moss-mid), var(--ochre-accent));
+      z-index: 60;
+      transition: width 0.08s linear;
+    }
+
+    /* Enhanced scroll reveal & float-in animations */
+    .reveal-up {
+      opacity: 0;
+      transform: translateY(48px);
+      filter: blur(4px);
+      transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+    .reveal-left {
+      opacity: 0;
+      transform: translateX(-48px);
+      filter: blur(4px);
+      transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+    .reveal-right {
+      opacity: 0;
+      transform: translateX(48px);
+      filter: blur(4px);
+      transition: opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1), filter 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+    .reveal-scale {
+      opacity: 0;
+      transform: scale(0.92) translateY(20px);
+      filter: blur(4px);
+      transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1), filter 1s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform, filter;
+    }
+
+    .is-visible {
+      opacity: 1 !important;
+      transform: translate(0, 0) scale(1) !important;
+      filter: blur(0px) !important;
+    }
+
+    .delay-1 { transition-delay: 0.08s; }
+    .delay-2 { transition-delay: 0.18s; }
+    .delay-3 { transition-delay: 0.28s; }
+    .delay-4 { transition-delay: 0.38s; }
+
+    /* Page Transition Loading Overlay */
+    #page-loader {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background-color: var(--moss-deep);
+      background-image: radial-gradient(rgba(243, 239, 230, 0.05) 1px, transparent 0);
+      background-size: 24px 24px;
+      color: var(--washi);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    #page-loader.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .loader-bar-track {
+      width: 180px;
+      height: 1.5px;
+      background: rgba(243, 239, 230, 0.2);
+      overflow: hidden;
+      margin: 1.25rem auto 0;
+    }
+    .loader-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--sage), var(--ochre-accent));
+      transition: width 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    #page-loader.active .loader-bar-fill {
+      width: 100%;
+    }
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-6px); }
+    }
+    .loader-title-float {
+      animation: floatSlow 2.4s ease-in-out infinite;
+    }
+
+    /* Annotated Image Placeholder Frame */
+    .image-slot {
+      position: relative;
+      background-color: var(--washi-warm);
+      border: 1px dashed rgba(54, 69, 30, 0.35);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 1.5rem;
+      overflow: hidden;
+      transition: border-color 0.35s ease, background-color 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .image-slot::before {
+      content: '';
+      position: absolute;
+      inset: 10px;
+      border: 1px solid rgba(54, 69, 30, 0.12);
+      pointer-events: none;
+    }
+
+    .image-slot:hover {
+      border-color: var(--moss);
+      background-color: #e4ddcc;
+    }
+
+    .image-slot-dark {
+      background-color: rgba(243, 239, 230, 0.06);
+      border: 1px dashed rgba(243, 239, 230, 0.32);
+      color: var(--washi);
+    }
+
+    .image-slot-dark::before {
+      border-color: rgba(243, 239, 230, 0.14);
+    }
+
+    .image-slot-dark:hover {
+      background-color: rgba(243, 239, 230, 0.11);
+      border-color: rgba(243, 239, 230, 0.6);
+    }
+
+    /* Page transition */
+    .page-view {
+      display: none;
+      animation: pageFadeIn 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .page-view.active {
+      display: block;
+    }
+
+    @keyframes pageFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Nav underline */
+    .nav-link {
+      position: relative;
+      padding-bottom: 4px;
+    }
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0%;
+      height: 1.5px;
+      background-color: var(--moss);
+      transition: width 0.3s ease;
+    }
+    .nav-link:hover::after,
+    .nav-link.active::after {
+      width: 100%;
+    }
+
+    /* Memory Game Card Flip */
+    .memory-card {
+      perspective: 900px;
+    }
+    .memory-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    .memory-card.flipped .memory-card-inner {
+      transform: rotateY(180deg);
+    }
+    .memory-card-front,
+    .memory-card-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .memory-card-back {
+      transform: rotateY(180deg);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 7px;
+    }
+    ::-webkit-scrollbar-track {
+      background: var(--washi);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(54, 69, 30, 0.3);
+      border-radius: 999px;
+    }
+  </style>
+</head>
+<body class="washi-texture min-h-screen flex flex-col">
+
+  <!-- Page Transition Loading Overlay -->
+  <div id="page-loader" aria-hidden="true">
+    <div class="text-center px-6 py-10 border border-[#f3efe6]/15 max-w-md w-[88%] relative">
+      <div class="text-[10px] tracking-[0.35em] uppercase text-[#c8962e] mb-3">UTaipei × Su-Chieng Museum</div>
+      <div class="font-serif-tc text-4xl sm:text-5xl font-medium tracking-[0.28em] text-[#f3efe6] loader-title-float">獨庶一幟</div>
+      <p id="loader-subtitle" class="text-xs sm:text-sm tracking-[0.22em] text-[#e8e2d3]/85 mt-4 font-light">
+        正在進入 獨庶一幟 世界中…
+      </p>
+      <div class="loader-bar-track">
+        <div class="loader-bar-fill"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scroll Progress Bar -->
+  <div id="scroll-progress"></div>
+
+  <!-- Top Navigation -->
+  <header class="sticky top-0 z-40 bg-[#f3efe6]/90 backdrop-blur-md border-b border-[#36451e]/15">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 h-20 flex items-center justify-between">
+      <!-- Brand Identity -->
+      <a href="#/" data-route="/" class="flex items-center gap-3 group">
+        <div class="w-10 h-10 rounded-full border border-[#36451e]/30 flex items-center justify-center bg-[#faf8f3] group-hover:bg-[#36451e] group-hover:text-[#f3efe6] transition-colors">
+          <span class="font-serif-tc text-sm font-semibold tracking-widest">獨</span>
+        </div>
+        <div>
+          <div class="font-serif-tc text-lg sm:text-xl font-semibold tracking-[0.18em] text-[#1a1c15]">獨庶一幟</div>
+          <div class="text-[10px] tracking-[0.22em] uppercase text-[#525747]">UTaipei × Su-Chieng Museum</div>
+        </div>
+      </a>
+
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8 text-sm tracking-wider text-[#3d4234]">
+        <a href="#/" data-route="/" class="nav-link active hover:text-[#1a1c15] transition-colors">首頁精選</a>
+        <a href="#/collection" data-route="/collection" class="nav-link hover:text-[#1a1c15] transition-colors">文創系列</a>
+        <a href="#/story" data-route="/story" class="nav-link hover:text-[#1a1c15] transition-colors">品牌理念</a>
+        <a href="#/fieldwork" data-route="/fieldwork" class="nav-link hover:text-[#1a1c15] transition-colors">踏查與學習</a>
+        <a href="#/about" data-route="/about" class="nav-link hover:text-[#1a1c15] transition-colors">團隊致謝</a>
+      </nav>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3">
+        <button id="open-bag-btn" type="button" class="relative flex items-center gap-2 px-3.5 py-2 rounded-full border border-[#36451e]/25 bg-[#faf8f3] hover:bg-[#36451e] hover:text-[#f3efe6] text-xs tracking-wider transition-colors">
+          <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+          <span class="hidden sm:inline">收藏袋</span>
+          <span id="bag-count" class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#36451e] text-[#f3efe6] text-[10px] font-medium">0</span>
+        </button>
+        <button id="mobile-menu-btn" type="button" class="md:hidden p-2 rounded-lg border border-[#36451e]/20 text-[#1a1c15]" aria-label="開啟選單">
+          <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Nav Drawer -->
+    <div id="mobile-menu" class="hidden md:hidden border-t border-[#36451e]/15 bg-[#f3efe6] px-6 py-4 space-y-3 text-sm tracking-wider">
+      <a href="#/" data-route="/" class="block py-2 border-b border-[#36451e]/10 text-[#1a1c15] font-medium">首頁精選</a>
+      <a href="#/collection" data-route="/collection" class="block py-2 border-b border-[#36451e]/10 text-[#3d4234]">文創系列</a>
+      <a href="#/story" data-route="/story" class="block py-2 border-b border-[#36451e]/10 text-[#3d4234]">品牌理念</a>
+      <a href="#/fieldwork" data-route="/fieldwork" class="block py-2 border-b border-[#36451e]/10 text-[#3d4234]">踏查與學習</a>
+      <a href="#/about" data-route="/about" class="block py-2 text-[#3d4234]">團隊致謝</a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-1">
+
+    <!-- ========================================================= -->
+    <!-- PAGE 1: HOME (PRODUCT-FIRST EDITORIAL LANDING)            -->
+    <!-- ========================================================= -->
+    <section id="page-home" class="page-view active">
+      <!-- Hero Section -->
+      <div class="moss-texture text-[#f3efe6] relative overflow-hidden">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-24 lg:py-28 grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div class="lg:col-span-6 space-y-7 reveal-left">
+            <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-[#f3efe6]/25 text-[11px] tracking-[0.2em] uppercase text-[#e8e2d3]">
+              <span>2026 Co-Branded Collection</span>
+              <span class="w-1 h-1 rounded-full bg-[#c8962e]"></span>
+              <span>三峽庶民美術館 × 臺北市立大學</span>
+            </div>
+
+            <h1 class="font-serif-tc text-4xl sm:text-5xl lg:text-6xl font-medium leading-[1.2] tracking-wide">
+              以藝術為日常，<br />
+              讓生活成為流動的美術館。
+            </h1>
+
+            <p class="text-[#e8e2d3]/85 text-base sm:text-lg leading-relaxed max-w-xl font-light">
+              取自三峽庶民美術館館長吳冠德的自然哲學與光影畫作，將三峽老街的土地溫度、鶯歌製陶工藝與當代生活器物交織，轉譯為五款可觸、可嗅、可隨身配戴的聯名文創作品。
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <a href="#/collection" data-route="/collection" class="inline-flex items-center gap-2.5 px-7 py-3.5 bg-[#f3efe6] text-[#1a1c15] hover:bg-[#e8e2d3] text-sm font-medium tracking-wider transition-all">
+                <span>探索全系列作品</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </a>
+              <a href="#/story" data-route="/story" class="inline-flex items-center gap-2 px-6 py-3.5 border border-[#f3efe6]/35 text-[#f3efe6] hover:bg-[#f3efe6]/10 text-sm tracking-wider transition-all">
+                <span>閱讀品牌故事</span>
+              </a>
+            </div>
+
+            <!-- Logo Slot Note -->
+            <div class="pt-4 border-t border-[#f3efe6]/15 flex items-center gap-4 text-xs text-[#e8e2d3]/75">
+              <span class="px-2.5 py-1 border border-dashed border-[#f3efe6]/40 rounded text-[11px] tracking-wider">標誌預留區</span>
+              <span>此處可放置「獨庶一幟」去背書法 LOGO 與聯名雙單位徽章（簡報第 1 頁）</span>
+            </div>
+          </div>
+
+          <!-- Hero Featured Image Slot -->
+          <div class="lg:col-span-6 reveal-right delay-2" id="hero-parallax">
+            <div class="image-slot image-slot-dark aspect-[4/3] rounded-sm p-8 sm:p-12">
+              <i data-lucide="image" class="w-10 h-10 mb-4 opacity-70"></i>
+              <span class="text-[11px] tracking-[0.25em] uppercase text-[#c8962e] mb-2">HERO IMAGE SLOT 01</span>
+              <h2 class="font-serif-tc text-xl sm:text-2xl mb-2">主視覺形象大圖區</h2>
+              <p class="text-sm text-[#e8e2d3]/80 max-w-sm leading-relaxed">
+                建議放置：<strong class="text-white font-medium">「陶瓷線香禮盒」點燃情境照（簡報第 27 頁右圖）</strong>，展現晨霧光影與線香嬝嬝的靜謐氛圍。
+              </p>
+              <span class="mt-5 text-[11px] px-3 py-1 rounded-full border border-[#f3efe6]/25 text-[#e8e2d3]/80">建議比例 4:3 ｜ 滿版情境圖</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Minimalist Editorial Ticker / Manifesto Bar -->
+      <div class="border-b border-[#36451e]/15 bg-[#faf8f3]">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 py-5 flex flex-wrap items-center justify-between gap-4 text-xs tracking-[0.18em] text-[#525747]">
+          <span>01 · 陶瓷線香禮盒</span>
+          <span class="hidden sm:inline text-[#36451e]/30">/</span>
+          <span>02 · 圍巾材料包</span>
+          <span class="hidden sm:inline text-[#36451e]/30">/</span>
+          <span>03 · 蕾絲水晶御守</span>
+          <span class="hidden sm:inline text-[#36451e]/30">/</span>
+          <span>04 · 聯名杯套《生活的窗景》</span>
+          <span class="hidden sm:inline text-[#36451e]/30">/</span>
+          <span>05 · 凝結明信片《歸途》</span>
+        </div>
+      </div>
+
+      <!-- Product-First Showcase (Editorial Staggered Layout) -->
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-16 reveal-up">
+          <div>
+            <div class="text-xs tracking-[0.22em] uppercase text-[#4e5e31] mb-3">Selected Creations</div>
+            <h2 class="font-serif-tc text-3xl sm:text-4xl font-medium text-[#1a1c15]">精選聯名文創系列</h2>
+          </div>
+          <a href="#/collection" data-route="/collection" class="inline-flex items-center gap-2 text-sm text-[#36451e] border-b border-[#36451e] pb-1 hover:opacity-75 transition-opacity self-start sm:self-auto">
+            <span>查看全部五款作品與定價明細</span>
+            <i data-lucide="arrow-up-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Feature Row 1: Ceramic Incense & Scarf Kit -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center mb-24">
+          <div class="lg:col-span-7 reveal-left">
+            <div class="image-slot aspect-[16/10] rounded-sm cursor-pointer" data-product-id="incense">
+              <i data-lucide="sparkles" class="w-8 h-8 mb-3 text-[#4e5e31]"></i>
+              <span class="text-[11px] tracking-[0.22em] uppercase text-[#4e5e31] mb-1">IMAGE SLOT 02 · 生活器物</span>
+              <h3 class="font-serif-tc text-lg font-medium text-[#1a1c15] mb-1.5">陶瓷線香禮盒 實拍展示區</h3>
+              <p class="text-xs text-[#525747] max-w-md">
+                放置圖片：<strong>簡報第 27 頁左圖（木盒開箱俯拍）</strong> 與 <strong>右圖（線香盤點燃特寫）</strong>
+              </p>
+            </div>
+          </div>
+          <div class="lg:col-span-5 space-y-5 reveal-right delay-1">
+            <div class="flex items-center justify-between text-xs tracking-[0.18em] text-[#525747]">
+              <span>NO. 01 — HOME RITUAL</span>
+              <span class="font-medium text-[#36451e]">NT$ 1,500</span>
+            </div>
+            <h3 class="font-serif-tc text-2xl sm:text-3xl font-medium">陶瓷線香禮盒</h3>
+            <p class="text-[#525747] leading-relaxed text-sm sm:text-base">
+              源自吳冠德館長筆下的自然哲學。選用溫潤質樸的手感陶瓷作為香座，串聯三峽與鶯歌深厚的製陶文化，將畫布上如霧般柔和的色彩化作可嗅、可觸的獨處時光。
+            </p>
+            <div class="pt-2 flex items-center gap-4">
+              <button type="button" class="open-product-modal px-5 py-2.5 bg-[#36451e] text-[#f3efe6] text-xs tracking-wider hover:bg-[#263115] transition-colors" data-product-id="incense">
+                查看規格與成本
+              </button>
+              <button type="button" class="add-to-bag px-5 py-2.5 border border-[#36451e]/30 text-xs tracking-wider hover:border-[#36451e] transition-colors" data-product-id="incense">
+                加入收藏袋
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature Row 2: 3-Column Editorial Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+          <!-- Card: Omamori -->
+          <article class="group reveal-up delay-1 flex flex-col">
+            <div class="image-slot aspect-[4/5] rounded-sm mb-5 cursor-pointer" data-product-id="omamori">
+              <i data-lucide="gem" class="w-7 h-7 mb-3 text-[#4e5e31]"></i>
+              <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">IMAGE SLOT 03</span>
+              <div class="font-serif-tc text-base font-medium text-[#1a1c15] mb-1">蕾絲水晶御守</div>
+              <p class="text-xs text-[#525747] leading-relaxed">
+                放置圖片：<strong>簡報第 23 頁</strong><br />四色御守特寫＋圓窗包裝卡
+              </p>
+            </div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <h3 class="font-serif-tc text-xl font-medium">蕾絲水晶御守</h3>
+              <span class="text-sm font-medium text-[#36451e]">NT$ 350</span>
+            </div>
+            <p class="text-xs text-[#525747] leading-relaxed mb-4 flex-1">
+              通透細緻的鏤空蕾絲包覆三峽老街在地水晶，將畫作流動光影轉譯為日常守護。
+            </p>
+            <button type="button" class="open-product-modal self-start text-xs tracking-wider text-[#36451e] border-b border-[#36451e]/40 pb-0.5 hover:border-[#36451e]" data-product-id="omamori">
+              探索四款色系 →
+            </button>
+          </article>
+
+          <!-- Card: Scarf Kit -->
+          <article class="group reveal-up delay-2 flex flex-col">
+            <div class="image-slot aspect-[4/5] rounded-sm mb-5 cursor-pointer" data-product-id="scarf">
+              <i data-lucide="scissors" class="w-7 h-7 mb-3 text-[#4e5e31]"></i>
+              <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">IMAGE SLOT 04</span>
+              <div class="font-serif-tc text-base font-medium text-[#1a1c15] mb-1">圍巾材料包</div>
+              <p class="text-xs text-[#525747] leading-relaxed">
+                放置圖片：<strong>簡報第 25 頁</strong><br />禮盒開箱毛線組＋手作編織照
+              </p>
+            </div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <h3 class="font-serif-tc text-xl font-medium">圍巾材料包</h3>
+              <span class="text-sm font-medium text-[#36451e]">NT$ 520</span>
+            </div>
+            <p class="text-xs text-[#525747] leading-relaxed mb-4 flex-1">
+              靈感源自畫作《大覺醒》。以藍綠色混色羊毛線與復古編織器，親手織出靜謐森林風景。
+            </p>
+            <button type="button" class="open-product-modal self-start text-xs tracking-wider text-[#36451e] border-b border-[#36451e]/40 pb-0.5 hover:border-[#36451e]" data-product-id="scarf">
+              查看材料內容 →
+            </button>
+          </article>
+
+          <!-- Card: Cup Sleeve & Postcard -->
+          <article class="group reveal-up delay-3 flex flex-col">
+            <div class="image-slot aspect-[4/5] rounded-sm mb-5 cursor-pointer" data-product-id="sleeve">
+              <i data-lucide="frame" class="w-7 h-7 mb-3 text-[#4e5e31]"></i>
+              <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">IMAGE SLOT 05</span>
+              <div class="font-serif-tc text-base font-medium text-[#1a1c15] mb-1">聯名杯套 — 生活的窗景</div>
+              <p class="text-xs text-[#525747] leading-relaxed">
+                放置圖片：<strong>簡報第 21 頁</strong><br />杯套主視覺＋正側面與配色票
+              </p>
+            </div>
+            <div class="flex items-baseline justify-between mb-1.5">
+              <h3 class="font-serif-tc text-xl font-medium">聯名杯套《生活的窗景》</h3>
+              <span class="text-xs tracking-wider px-2 py-0.5 bg-[#e8e2d3] text-[#36451e]">聯名企劃</span>
+            </div>
+            <p class="text-xs text-[#525747] leading-relaxed mb-4 flex-1">
+              揉合庶民美術館窗格構圖與植物意象，以窗為景、以藝為伴，讓每次提起都與藝術相遇。
+            </p>
+            <button type="button" class="open-product-modal self-start text-xs tracking-wider text-[#36451e] border-b border-[#36451e]/40 pb-0.5 hover:border-[#36451e]" data-product-id="sleeve">
+              欣賞設計語彙 →
+            </button>
+          </article>
+        </div>
+      </div>
+
+      <!-- Brand Spirit Strip (Teaser to #/story & #/fieldwork) -->
+      <div class="bg-[#eae4d5] border-y border-[#36451e]/15">
+        <div class="max-w-7xl mx-auto px-5 sm:px-8 py-20 grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+          <div class="lg:col-span-5 reveal-left">
+            <div class="text-xs tracking-[0.22em] uppercase text-[#4e5e31] mb-3">Brand Philosophy</div>
+            <h2 class="font-serif-tc text-3xl font-medium mb-5">獨「庶」一幟的<br />三層精神脈絡</h2>
+            <p class="text-sm text-[#525747] leading-relaxed mb-6">
+              藝術不是遙不可及的展品，而是發自肺腑的平凡記憶。我們將臺北市立大學的創新思維，交織進三峽庶民美術館的日常美學。
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a href="#/story" data-route="/story" class="px-5 py-2.5 bg-[#36451e] text-[#f3efe6] text-xs tracking-wider hover:bg-[#263115] transition-colors">
+                深入了解品牌理念
+              </a>
+              <a href="#/fieldwork" data-route="/fieldwork" class="px-5 py-2.5 border border-[#36451e]/35 text-xs tracking-wider hover:bg-[#36451e]/5 transition-colors">
+                體驗「庶民憶起拍」遊戲
+              </a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15 reveal-up delay-1">
+              <div class="font-serif-tc text-2xl text-[#36451e] mb-2">「獨」為連結</div>
+              <p class="text-xs text-[#525747] leading-relaxed">
+                取自「獨樹一幟」，呼應吳冠德館長對藝術的堅持與熱忱，展現不受框架限制的藝術精神。
+              </p>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15 reveal-up delay-2">
+              <div class="font-serif-tc text-2xl text-[#36451e] mb-2">「庶」為初心</div>
+              <p class="text-xs text-[#525747] leading-relaxed">
+                以庶民美術館為核心象徵，打破藝術與大眾的距離，讓每個人都能親近與欣賞文化。
+              </p>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15 reveal-up delay-3">
+              <div class="font-serif-tc text-2xl text-[#36451e] mb-2">「一幟」為傳承</div>
+              <p class="text-xs text-[#525747] leading-relaxed">
+                延續推廣藝術與在地文化的理念，將藝術融入日常，串連地方人文與生活美學。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Explore Chapters: Clickable Cards for Brand Story, Fieldwork, Team -->
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-12 reveal-up">
+          <div>
+            <div class="text-xs tracking-[0.22em] uppercase text-[#4e5e31] mb-2">Explore Chapters</div>
+            <h2 class="font-serif-tc text-2xl sm:text-3xl font-medium text-[#1a1c15]">深入探索品牌與企劃篇章</h2>
+          </div>
+          <p class="text-xs text-[#525747]">點擊下方任一篇章卡片，即可跳轉至完整獨立頁面</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+          <a href="#/story" data-route="/story" class="group bg-[#faf8f3] border border-[#36451e]/20 p-8 flex flex-col justify-between hover:border-[#36451e] hover:-translate-y-1.5 transition-all duration-300 reveal-up delay-1">
+            <div>
+              <div class="flex items-center justify-between text-xs tracking-[0.2em] text-[#4e5e31] mb-4">
+                <span>CHAPTER 02</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+              <h3 class="font-serif-tc text-2xl font-medium text-[#1a1c15] mb-3">品牌理念</h3>
+              <p class="text-xs sm:text-sm text-[#525747] leading-relaxed">
+                閱讀「獨・庶・一幟」三大核心精神，以及吳冠德館長《歸途》、《大覺醒》畫作轉譯脈絡。
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-[#36451e]/10 text-xs tracking-wider text-[#36451e] font-medium">
+              進入品牌理念頁 →
+            </div>
+          </a>
+
+          <a href="#/fieldwork" data-route="/fieldwork" class="group bg-[#faf8f3] border border-[#36451e]/20 p-8 flex flex-col justify-between hover:border-[#36451e] hover:-translate-y-1.5 transition-all duration-300 reveal-up delay-2">
+            <div>
+              <div class="flex items-center justify-between text-xs tracking-[0.2em] text-[#4e5e31] mb-4">
+                <span>CHAPTER 03</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+              <h3 class="font-serif-tc text-2xl font-medium text-[#1a1c15] mb-3">踏查與學習</h3>
+              <p class="text-xs sm:text-sm text-[#525747] leading-relaxed">
+                走訪三峽庶民美術館、祖師廟與校園場域紀錄，並體驗 60 秒「庶民憶起拍」翻牌互動遊戲。
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-[#36451e]/10 text-xs tracking-wider text-[#36451e] font-medium">
+              進入踏查與學習頁 →
+            </div>
+          </a>
+
+          <a href="#/about" data-route="/about" class="group bg-[#faf8f3] border border-[#36451e]/20 p-8 flex flex-col justify-between hover:border-[#36451e] hover:-translate-y-1.5 transition-all duration-300 reveal-up delay-3">
+            <div>
+              <div class="flex items-center justify-between text-xs tracking-[0.2em] text-[#4e5e31] mb-4">
+                <span>CHAPTER 04</span>
+                <i data-lucide="arrow-up-right" class="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+              </div>
+              <h3 class="font-serif-tc text-2xl font-medium text-[#1a1c15] mb-3">團隊致謝</h3>
+              <p class="text-xs sm:text-sm text-[#525747] leading-relaxed">
+                臺北市立大學教育思潮與文案設計第一組 9 位成員完整分工名錄，以及貴賓與師長致謝名單。
+              </p>
+            </div>
+            <div class="mt-6 pt-4 border-t border-[#36451e]/10 text-xs tracking-wider text-[#36451e] font-medium">
+              進入團隊致謝頁 →
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- PAGE 2: COLLECTION (FULL CATALOG & COST TRANSPARENCY)     -->
+    <!-- ========================================================= -->
+    <section id="page-collection" class="page-view">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
+        <div class="max-w-2xl mb-12 reveal-up">
+          <div class="text-xs tracking-[0.22em] uppercase text-[#4e5e31] mb-3">01 / Collection & Pricing</div>
+          <h1 class="font-serif-tc text-3xl sm:text-5xl font-medium mb-4">聯名文創全系列</h1>
+          <p class="text-sm sm:text-base text-[#525747] leading-relaxed">
+            每一件作品皆由吳冠德館長畫作與三峽在地風景轉譯而來。點擊任一作品可檢視完整創作理念、圖片配置標註與製作成本估算。
+          </p>
+        </div>
+
+        <!-- Category Filters -->
+        <div class="flex flex-wrap items-center gap-2.5 mb-12 pb-6 border-b border-[#36451e]/15 reveal-up delay-1" id="collection-filters">
+          <button type="button" class="filter-btn active px-4 py-2 rounded-full text-xs tracking-wider bg-[#36451e] text-[#f3efe6]" data-category="all">全部作品 (5)</button>
+          <button type="button" class="filter-btn px-4 py-2 rounded-full text-xs tracking-wider border border-[#36451e]/25 text-[#3d4234] hover:border-[#36451e]" data-category="living">生活器物</button>
+          <button type="button" class="filter-btn px-4 py-2 rounded-full text-xs tracking-wider border border-[#36451e]/25 text-[#3d4234] hover:border-[#36451e]" data-category="craft">織品手作</button>
+          <button type="button" class="filter-btn px-4 py-2 rounded-full text-xs tracking-wider border border-[#36451e]/25 text-[#3d4234] hover:border-[#36451e]" data-category="charm">隨身祝福</button>
+          <button type="button" class="filter-btn px-4 py-2 rounded-full text-xs tracking-wider border border-[#36451e]/25 text-[#3d4234] hover:border-[#36451e]" data-category="paper">紙品藝術</button>
+        </div>
+
+        <!-- Product Grid Container (rendered by JS) -->
+        <div id="collection-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10"></div>
+
+        <!-- Cost Comparison Summary Table -->
+        <div class="mt-24 pt-16 border-t border-[#36451e]/15 reveal-up">
+          <div class="mb-8">
+            <div class="text-xs tracking-[0.22em] uppercase text-[#4e5e31] mb-2">Production Transparency</div>
+            <h2 class="font-serif-tc text-2xl sm:text-3xl font-medium">文創品製作規模與價格估算總覽</h2>
+          </div>
+          <div class="overflow-x-auto bg-[#faf8f3] border border-[#36451e]/15">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-[#36451e] text-[#f3efe6] text-xs tracking-wider uppercase">
+                <tr>
+                  <th class="py-4 px-5 font-medium">文創品項</th>
+                  <th class="py-4 px-5 font-medium">預估製作規模</th>
+                  <th class="py-4 px-5 font-medium">預估單位成本</th>
+                  <th class="py-4 px-5 font-medium">預估售價</th>
+                  <th class="py-4 px-5 font-medium">核心材質亮點</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-[#36451e]/10 text-[#3d4234]">
+                <tr class="hover:bg-[#f3efe6]/70">
+                  <td class="py-4 px-5 font-serif-tc font-medium text-[#1a1c15]">蕾絲水晶御守</td>
+                  <td class="py-4 px-5">300 個</td>
+                  <td class="py-4 px-5">NT$ 85</td>
+                  <td class="py-4 px-5 font-medium text-[#36451e]">NT$ 350</td>
+                  <td class="py-4 px-5 text-xs">3×15cm 尼龍蕾絲、三峽老街天然水晶碎石 (10g)、中國結配件</td>
+                </tr>
+                <tr class="hover:bg-[#f3efe6]/70">
+                  <td class="py-4 px-5 font-serif-tc font-medium text-[#1a1c15]">圍巾材料包</td>
+                  <td class="py-4 px-5">150 個</td>
+                  <td class="py-4 px-5">NT$ 297</td>
+                  <td class="py-4 px-5 font-medium text-[#36451e]">NT$ 520</td>
+                  <td class="py-4 px-5 text-xs">100g×4 混色羊毛線、編織器（含框、勾針）、布標與教學影片</td>
+                </tr>
+                <tr class="hover:bg-[#f3efe6]/70">
+                  <td class="py-4 px-5 font-serif-tc font-medium text-[#1a1c15]">陶瓷線香禮盒</td>
+                  <td class="py-4 px-5">150 個</td>
+                  <td class="py-4 px-5">NT$ 375</td>
+                  <td class="py-4 px-5 font-medium text-[#36451e]">NT$ 1,500</td>
+                  <td class="py-4 px-5 text-xs">手感陶瓷線香盤 (6×15cm) 與香插、30支線香、限量編號典藏卡</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- PAGE 3: BRAND STORY & ART TRANSLATION                     -->
+    <!-- ========================================================= -->
+    <section id="page-story" class="page-view">
+      <div class="moss-texture text-[#f3efe6] py-16 sm:py-24">
+        <div class="max-w-5xl mx-auto px-5 sm:px-8 text-center reveal-up">
+          <div class="text-xs tracking-[0.25em] uppercase text-[#c8962e] mb-4">02 / Brand Story & Philosophy</div>
+          <h1 class="font-serif-tc text-3xl sm:text-5xl font-medium leading-tight mb-6">
+            藝術，是流動不息的情緒轉譯。<br />以「獨『庶』一幟」連結生活
+          </h1>
+          <p class="text-[#e8e2d3]/85 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+            將三峽庶民美術館的獨特之處，與臺北市立大學的創新思維交織融合。庶民為核心，將藝術回歸大眾、流連於日常；獨特為精神，讓燦爛縈繞四周，沉澱屬於自己的厚實記憶。
+          </p>
+        </div>
+      </div>
+
+      <div class="max-w-6xl mx-auto px-5 sm:px-8 py-20 space-y-24">
+        <!-- Three Pillars -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="bg-[#faf8f3] p-8 border border-[#36451e]/15 reveal-up delay-1">
+            <div class="inline-block px-3 py-1 bg-[#36451e] text-[#f3efe6] text-xs tracking-widest mb-5">「獨」為連結</div>
+            <p class="text-sm text-[#3d4234] leading-relaxed">
+              取自「獨樹一幟」，呼應吳冠德館長對藝術的堅持與熱忱，以及返鄉創立庶民美術館的初衷，展現不受既定框架限制的藝術精神。
+            </p>
+          </div>
+          <div class="bg-[#faf8f3] p-8 border border-[#36451e]/15 reveal-up delay-2">
+            <div class="inline-block px-3 py-1 bg-[#36451e] text-[#f3efe6] text-xs tracking-widest mb-5">「庶」為初心</div>
+            <p class="text-sm text-[#3d4234] leading-relaxed">
+              以庶民美術館為核心象徵，連結藝術與庶民生活。打破藝術與大眾之間的距離，讓藝術不再是少數人的專利，而是每個人都能親近與欣賞的文化。
+            </p>
+          </div>
+          <div class="bg-[#faf8f3] p-8 border border-[#36451e]/15 reveal-up delay-3">
+            <div class="inline-block px-3 py-1 bg-[#36451e] text-[#f3efe6] text-xs tracking-widest mb-5">「一幟」為傳承</div>
+            <p class="text-sm text-[#3d4234] leading-relaxed">
+              延續吳冠德館長推廣藝術與在地文化的理念，將藝術融入日常，串連地方人文與生活美學，讓每個人都能找到屬於自己的藝術視角，展現獨一無二的風格。
+            </p>
+          </div>
+        </div>
+
+        <!-- Art Translation Section: 《歸途》 & 《大覺醒》 -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+          <div class="lg:col-span-6 reveal-left">
+            <div class="image-slot aspect-[4/3] rounded-sm">
+              <i data-lucide="palette" class="w-8 h-8 mb-3 text-[#4e5e31]"></i>
+              <span class="text-[11px] tracking-[0.22em] uppercase text-[#4e5e31] mb-1">IMAGE SLOT 06 · 原作視覺</span>
+              <h3 class="font-serif-tc text-lg font-medium mb-1">吳冠德館長畫作《歸途》(2005)</h3>
+              <p class="text-xs text-[#525747] max-w-sm">
+                放置圖片：<strong>簡報第 20 頁上方原作圖</strong>（搭配第 19 頁明信片成品圖作為轉譯對照）
+              </p>
+            </div>
+          </div>
+          <div class="lg:col-span-6 space-y-5 reveal-right delay-1">
+            <div class="text-xs tracking-[0.2em] uppercase text-[#4e5e31]">Art Translation</div>
+            <h2 class="font-serif-tc text-2xl sm:text-3xl font-medium">從畫布到日常器物的美學轉譯</h2>
+            <p class="text-sm text-[#525747] leading-relaxed">
+              我們將館長吳冠德老師 2005 年畫作《歸途》與系列作品《大覺醒》中的流動光影、霧色藍綠與層次色調，分別轉譯為明信片的亮黃細線取景框、圍巾的蓬鬆混色羊毛、水晶礦石的自然能量，以及鶯歌陶瓷香座的溫潤手感。
+            </p>
+            <div class="border-l-2 border-[#36451e] pl-4 py-1 text-sm font-serif-tc text-[#1a1c15] italic">
+              「在快節奏的數位時代，讓藝術化作一份日常守護與歸途漫信。」
+            </div>
+            <div class="pt-2">
+              <a href="#/collection" data-route="/collection" class="inline-flex items-center gap-2 text-xs tracking-wider uppercase text-[#36451e] border-b border-[#36451e] pb-1">
+                <span>前往選購轉譯作品</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- PAGE 4: FIELDWORK & INTERACTIVE MEMORY GAME               -->
+    <!-- ========================================================= -->
+    <section id="page-fieldwork" class="page-view">
+      <div class="max-w-7xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
+        <div class="max-w-2xl mb-14 reveal-up">
+          <div class="text-xs tracking-[0.22em] uppercase text-[#4e5e31] mb-3">03 / Fieldwork & Interactive Learning</div>
+          <h1 class="font-serif-tc text-3xl sm:text-5xl font-medium mb-4">文化踏查與「庶民憶起拍」</h1>
+          <p class="text-sm sm:text-base text-[#525747] leading-relaxed">
+            從校園歷史、科技教育到三峽老街的常民美學，紀錄我們走訪四大場域的洞察，並邀請您線上體驗我們為美術館設計的互動記憶遊戲。
+          </p>
+        </div>
+
+        <!-- 3 Fieldwork Photo Slots -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-16">
+          <div class="image-slot aspect-[4/3] rounded-sm reveal-up delay-1">
+            <i data-lucide="camera" class="w-7 h-7 mb-2.5 text-[#4e5e31]"></i>
+            <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">FIELDWORK SLOT 01</span>
+            <div class="font-serif-tc text-sm font-medium mb-1">踏查合照 01</div>
+            <p class="text-xs text-[#525747]">放置圖片：<strong>簡報第 14 頁左圖</strong>（三峽庶民美術館門口大合照）</p>
+          </div>
+          <div class="image-slot aspect-[4/3] rounded-sm reveal-up delay-2">
+            <i data-lucide="camera" class="w-7 h-7 mb-2.5 text-[#4e5e31]"></i>
+            <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">FIELDWORK SLOT 02</span>
+            <div class="font-serif-tc text-sm font-medium mb-1">踏查合照 02</div>
+            <p class="text-xs text-[#525747]">放置圖片：<strong>簡報第 14 頁中圖</strong>（三峽祖師廟與街區鏡面合影）</p>
+          </div>
+          <div class="image-slot aspect-[4/3] rounded-sm reveal-up delay-3">
+            <i data-lucide="camera" class="w-7 h-7 mb-2.5 text-[#4e5e31]"></i>
+            <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">FIELDWORK SLOT 03</span>
+            <div class="font-serif-tc text-sm font-medium mb-1">踏查紀錄 03</div>
+            <p class="text-xs text-[#525747]">放置圖片：<strong>簡報第 14 頁右圖</strong>（館內展區與歷史畫作紀錄）</p>
+          </div>
+        </div>
+
+        <!-- 4 Fieldwork Reflections -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-24">
+          <div class="bg-[#faf8f3] p-8 border border-[#36451e]/15 reveal-up delay-1">
+            <div class="text-xs tracking-[0.18em] text-[#4e5e31] mb-2">SITE 01</div>
+            <h3 class="font-serif-tc text-xl font-medium mb-3">三峽庶民美術館</h3>
+            <p class="text-sm text-[#525747] leading-relaxed">
+              與庶民美術館合作聯名是組內的期許。藝術不一定是遙不可及的展品，它也能以極為日常樸素的樣式呈現。「平凡成就非凡」，這些發自肺腑的平凡記憶，讓生活經驗轉化為動人的故事與情感傳遞。
+            </p>
+          </div>
+          <div class="bg-[#faf8f3] p-8 border border-[#36451e]/15 reveal-up delay-2">
+            <div class="text-xs tracking-[0.18em] text-[#4e5e31] mb-2">SITE 02</div>
+            <h3 class="font-serif-tc text-xl font-medium mb-3">三峽祖師廟</h3>
+            <p class="text-sm text-[#525747] leading-relaxed">
+              廟宇不只是承載祭祀與祈福的場所，更是一個記錄地方文化與時代變遷的空間。從建築格局到細部雕刻，看見不同工藝師傅留下的痕跡，感受到傳統藝術融入在日常生活之中持續被欣賞與傳承。
+            </p>
+          </div>
+          <div class="bg-[#faf8f3] p-8 border border-[#36451e]/15 reveal-up delay-1">
+            <div class="text-xs tracking-[0.18em] text-[#4e5e31] mb-2">SITE 03</div>
+            <h3 class="font-serif-tc text-xl font-medium mb-3">校史室和校園巡禮</h3>
+            <p class="text-sm text-[#525747] leading-relaxed">
+              透過校史更了解學校的發展與變化，發覺校園背後蘊含著豐富的教育、文化與歷史意義。從不同時期的校制與學生生活中，感受教育隨著時代不斷改變，過去的經驗也成為現在與未來的借鑑。
+            </p>
+          </div>
+          <div class="bg-[#faf8f3] p-8 border border-[#36451e]/15 reveal-up delay-2">
+            <div class="text-xs tracking-[0.18em] text-[#4e5e31] mb-2">SITE 04</div>
+            <h3 class="font-serif-tc text-xl font-medium mb-3">臺北市無人機教育中心</h3>
+            <p class="text-sm text-[#525747] leading-relaxed">
+              將抽象的科技發展與實際操作相互連結。無人機除了航拍，更可應用於環境觀察、配送物資及救災等領域。讓學生親自接觸與操作科技，更能引發興趣並思考科技如何回應真實生活中的需求。
+            </p>
+          </div>
+        </div>
+
+        <!-- Interactive Game: 庶民憶起拍 -->
+        <div class="moss-texture text-[#f3efe6] p-8 sm:p-12 rounded-sm reveal-up" id="memory-game-section">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+            <div class="lg:col-span-5 space-y-5">
+              <div class="text-xs tracking-[0.22em] uppercase text-[#c8962e]">Interactive Learning Design</div>
+              <h2 class="font-serif-tc text-3xl font-medium">學習設計：庶民憶起拍</h2>
+              <p class="text-sm text-[#e8e2d3]/85 leading-relaxed">
+                透過輕鬆有趣的記憶配對互動，拉近藝術與大眾的距離。限時 <strong>60 秒</strong>，輪流翻開兩張作品卡牌，配對成功即可獲得一分並解鎖作品特色與問題思考卡！
+              </p>
+
+              <!-- Game Status & Controls -->
+              <div class="grid grid-cols-2 gap-4 py-4 border-y border-[#f3efe6]/15">
+                <div>
+                  <div class="text-[11px] tracking-widest uppercase text-[#e8e2d3]/70">剩餘時間</div>
+                  <div class="font-serif-tc text-2xl font-medium" id="game-timer">60s</div>
+                </div>
+                <div>
+                  <div class="text-[11px] tracking-widest uppercase text-[#e8e2d3]/70">配對得分</div>
+                  <div class="font-serif-tc text-2xl font-medium"><span id="game-score">0</span> / 4</div>
+                </div>
+              </div>
+
+              <button id="start-game-btn" type="button" class="w-full sm:w-auto px-7 py-3 bg-[#f3efe6] text-[#1a1c15] text-xs font-medium tracking-wider hover:bg-[#e8e2d3] transition-colors">
+                開始 / 重新洗牌計時
+              </button>
+
+              <!-- Prompt Card Box -->
+              <div class="bg-[#1a1c15]/40 border border-[#f3efe6]/15 p-5 rounded-sm space-y-2">
+                <div class="text-[11px] tracking-[0.2em] uppercase text-[#c8962e]">關主引導與問題卡範例</div>
+                <p id="game-insight" class="text-sm text-[#e8e2d3] leading-relaxed">
+                  點擊「開始 / 重新洗牌計時」後翻開卡牌。每次配對成功，這裡將顯示該作品特色與引導提問！
+                </p>
+                <ul class="text-xs text-[#e8e2d3]/75 space-y-1 pt-2 border-t border-[#f3efe6]/10">
+                  <li>• 這幅畫最吸引你的地方是什麼？</li>
+                  <li>• 這幅作品會讓你聯想到什麼？</li>
+                  <li>• 你認為這幅畫帶給你什麼感受？</li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- 4x2 Card Grid -->
+            <div class="lg:col-span-7">
+              <div id="memory-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3.5"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- PAGE 5: ABOUT, TEAM DIVISION & ACKNOWLEDGMENTS            -->
+    <!-- ========================================================= -->
+    <section id="page-about" class="page-view">
+      <div class="max-w-6xl mx-auto px-5 sm:px-8 py-16 sm:py-20">
+        <div class="max-w-2xl mb-16 reveal-up">
+          <div class="text-xs tracking-[0.22em] uppercase text-[#4e5e31] mb-3">04 / Team & Acknowledgments</div>
+          <h1 class="font-serif-tc text-3xl sm:text-5xl font-medium mb-4">製作團隊與指導致謝</h1>
+          <p class="text-sm sm:text-base text-[#525747] leading-relaxed">
+            臺北市立大學「教育思潮與文案設計」課程第一組聯名企劃成果。<br />
+            指導老師：<strong class="text-[#1a1c15]">方志華 教授</strong>
+          </p>
+        </div>
+
+        <!-- Team Division Grid (Slide 30) -->
+        <div class="mb-20 reveal-up delay-1">
+          <h2 class="font-serif-tc text-2xl font-medium mb-8 pb-3 border-b border-[#36451e]/20">組內分工名錄</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">蔡子儀</div>
+              <div class="text-xs text-[#525747]">學習設計、道具製作</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">陳微婷</div>
+              <div class="text-xs text-[#525747]">品牌精神、道具製作</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">曾琬晴</div>
+              <div class="text-xs text-[#525747]">學習設計、道具製作</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">葉芷瑄</div>
+              <div class="text-xs text-[#525747]">文案文字、品牌精神</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">林柏佑</div>
+              <div class="text-xs text-[#525747]">文案文字、報告</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">郭家妮</div>
+              <div class="text-xs text-[#525747]">文案文字</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">黃宣語</div>
+              <div class="text-xs text-[#525747]">LOGO、簡報、明信片</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">陳佳君</div>
+              <div class="text-xs text-[#525747]">聯名文創品（杯套）</div>
+            </div>
+            <div class="bg-[#faf8f3] p-6 border border-[#36451e]/15">
+              <div class="font-serif-tc text-lg font-medium mb-1">王品涵</div>
+              <div class="text-xs text-[#525747]">各階文創品、簡報</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Acknowledgments (Slide 2) -->
+        <div class="moss-texture text-[#f3efe6] p-10 sm:p-14 rounded-sm reveal-up delay-2">
+          <div class="text-center max-w-2xl mx-auto mb-10">
+            <div class="text-xs tracking-[0.25em] uppercase text-[#c8962e] mb-2">Acknowledgments</div>
+            <h2 class="font-serif-tc text-3xl font-medium mb-3">致謝</h2>
+            <p class="text-xs text-[#e8e2d3]/80">感謝各位貴賓、師長蒞臨指導</p>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center font-serif-tc text-lg">
+            <div class="py-3 border border-[#f3efe6]/15">吳冠德 館長</div>
+            <div class="py-3 border border-[#f3efe6]/15">蔡麟傑 主任</div>
+            <div class="py-3 border border-[#f3efe6]/15">郭淑玲 老師</div>
+            <div class="py-3 border border-[#f3efe6]/15">何妍儀 老師</div>
+            <div class="py-3 border border-[#f3efe6]/15">文筱琳 老師</div>
+            <div class="py-3 border border-[#f3efe6]/15">吳佳謀 老師</div>
+            <div class="py-3 border border-[#f3efe6]/15">葉興華 老師</div>
+            <div class="py-3 border border-[#f3efe6]/15">方志華 老師</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Minimalist Footer -->
+  <footer class="border-t border-[#36451e]/15 bg-[#eae4d5] text-[#3d4234]">
+    <div class="max-w-7xl mx-auto px-5 sm:px-8 py-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div>
+        <div class="font-serif-tc text-lg font-semibold tracking-[0.18em] text-[#1a1c15]">獨庶一幟 DUSHU YIZHI</div>
+        <p class="text-xs text-[#525747] mt-1">臺北市立大學 教育思潮與文案設計 第一組 × 三峽庶民美術館</p>
+      </div>
+      <div class="flex flex-wrap gap-6 text-xs tracking-wider">
+        <a href="#/" data-route="/" class="hover:text-[#1a1c15]">首頁</a>
+        <a href="#/collection" data-route="/collection" class="hover:text-[#1a1c15]">文創系列</a>
+        <a href="#/story" data-route="/story" class="hover:text-[#1a1c15]">品牌理念</a>
+        <a href="#/fieldwork" data-route="/fieldwork" class="hover:text-[#1a1c15]">踏查與學習</a>
+        <a href="#/about" data-route="/about" class="hover:text-[#1a1c15]">團隊致謝</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PRODUCT DETAIL MODAL -->
+  <div id="product-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-[#1a1c15]/60 backdrop-blur-sm p-4">
+    <div class="bg-[#faf8f3] border border-[#36451e]/20 max-w-3xl w-full max-h-[90vh] overflow-y-auto rounded-sm shadow-2xl relative">
+      <button id="close-product-modal" type="button" class="sticky top-4 float-right mr-4 mt-4 w-9 h-9 rounded-full bg-[#f3efe6] border border-[#36451e]/20 flex items-center justify-center hover:bg-[#36451e] hover:text-[#f3efe6] transition-colors" aria-label="關閉視窗">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+      <div id="product-modal-body" class="p-6 sm:p-10"></div>
+    </div>
+  </div>
+
+  <!-- COLLECTION BAG DRAWER -->
+  <div id="bag-drawer" class="fixed inset-0 z-50 hidden justify-end bg-[#1a1c15]/50 backdrop-blur-xs">
+    <div class="bg-[#faf8f3] w-full max-w-md h-full flex flex-col border-l border-[#36451e]/20 shadow-2xl">
+      <div class="px-6 py-5 border-b border-[#36451e]/15 flex items-center justify-between">
+        <div>
+          <h2 class="font-serif-tc text-xl font-medium">文創收藏袋</h2>
+          <p class="text-[11px] text-[#525747]">試算聯名預購與採購清單</p>
+        </div>
+        <button id="close-bag-btn" type="button" class="p-2 rounded-full hover:bg-[#eae4d5]" aria-label="關閉收藏袋">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div id="bag-items" class="flex-1 overflow-y-auto p-6 space-y-4"></div>
+      <div class="p-6 border-t border-[#36451e]/15 bg-[#f3efe6] space-y-4">
+        <div class="flex items-center justify-between text-sm">
+          <span class="text-[#525747]">預估總金額</span>
+          <span id="bag-total" class="font-serif-tc text-xl font-semibold text-[#36451e]">NT$ 0</span>
+        </div>
+        <button id="clear-bag-btn" type="button" class="w-full py-3 border border-[#36451e]/30 text-xs tracking-wider hover:bg-[#36451e] hover:text-[#f3efe6] transition-colors">
+          清空收藏袋
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================
+    // DATA: GROUNDED FROM PRESENTATION SLIDES 1-32
+    // =========================================================
+    const PRODUCTS = [
+      {
+        id: 'incense',
+        category: 'living',
+        categoryLabel: '生活器物',
+        name: '陶瓷線香禮盒',
+        subtitle: 'Ceramic Incense Gift Box',
+        price: 1500,
+        priceText: 'NT$ 1,500',
+        scale: '150 個製作規模',
+        unitCost: 'NT$ 375',
+        imageNotes: [
+          '主圖：簡報第 27 頁右圖（陶瓷香盤點燃線香情境照）',
+          '副圖：簡報第 27 頁左圖（木盒開箱俯視圖：含香盤、香插、四管線香、水晶）'
+        ],
+        concept: '源自庶民美術館館長吳冠德筆下的自然哲學。我們將畫布上如霧般柔和的色彩與安穩的氛圍，化作可嗅、可觸的生活器物；選用溫潤質樸的手感陶瓷作為香座，串聯起三峽與鄰近鶯歌深厚的製陶文化，並搭配氣息沉穩的天然線香，呼應美術館質樸溫厚、讓美學紮根日常的精神。',
+        quote: '邀請您在忙碌的縫隙裡點起一炷香，讓視覺的溫潤與嗅覺的沉靜，陪伴您度過每一個安穩的獨處時光。',
+        costs: [
+          { item: '線香盤', spec: '6×15 cm', cost: '200 元' },
+          { item: '香插', spec: '4×4×4 cm', cost: '80 元' },
+          { item: '線香', spec: '30 支，12 cm', cost: '40 元' },
+          { item: '火柴', spec: '30 支', cost: '10 元' },
+          { item: '包裝木盒', spec: '20×12×5.5 cm', cost: '0 元' },
+          { item: '內部保護', spec: '高密度 EVA 泡棉凹槽', cost: '20 元' },
+          { item: '印刷', spec: '限量編號典藏卡 + 說明', cost: '25 元' }
+        ]
+      },
+      {
+        id: 'scarf',
+        category: 'craft',
+        categoryLabel: '織品手作',
+        name: '圍巾材料包',
+        subtitle: 'Woven Forest Scarf Kit',
+        price: 520,
+        priceText: 'NT$ 520',
+        scale: '150 個製作規模',
+        unitCost: 'NT$ 297',
+        imageNotes: [
+          '主圖：簡報第 25 頁左圖（白盒緞帶包裝、四球藍綠米白毛線與編織器）',
+          '副圖：簡報第 25 頁右圖（手作鉤針編織情境照）'
+        ],
+        concept: '源自庶民美術館館長吳冠德的畫作《大覺醒》。將畫中層層交織、如霧般的藍綠色與細膩光影，轉譯為蓬鬆柔軟的混色羊毛線；選擇這個既貼近常民生活又帶有復古感的媒材「毛線」，呼應美術館館內風格及讓藝術回歸日常的精神。',
+        quote: '邀請您在一針一線的編織裡，親手織出屬於自己的靜謐森林風景。',
+        costs: [
+          { item: '羊毛線', spec: '100g × 4', cost: '260 元' },
+          { item: '編織器', spec: '含框、勾針', cost: '15 元' },
+          { item: '布標', spec: '2×5 cm', cost: '2 元' },
+          { item: '教學影片', spec: '線上教學', cost: '0 元' },
+          { item: '包裝', spec: '介紹卡、袋子等', cost: '20 元' }
+        ]
+      },
+      {
+        id: 'omamori',
+        category: 'charm',
+        categoryLabel: '隨身祝福',
+        name: '蕾絲水晶御守',
+        subtitle: 'Lace Crystal Omamori',
+        price: 350,
+        priceText: 'NT$ 350',
+        scale: '300 個製作規模',
+        unitCost: 'NT$ 85',
+        imageNotes: [
+          '主圖：簡報第 23 頁右圖（森林綠植物窗景紙卡與御守包裝）',
+          '副圖：簡報第 23 頁左四圖（深藍、森綠、冰藍、緋紅四款實拍）'
+        ],
+        concept: '源自庶民美術館館長吳冠德的系列畫作。將畫中流動的自然光影與層次色調，轉譯為不同色澤及帶有不同能量的天然水晶礦石；蕾絲御守則是借鏡日本神社的創新形式，以通透細緻的鏤空蕾絲，包覆來自三峽老街在地商店販售的水晶，既呼應老街的常民生活地景，也讓藝術化作一份日常守護。',
+        quote: '邀請您將這份凝結了畫作色彩與土地祝福的御守帶在身邊，在光線穿透蕾絲的瞬間，收穫屬於自己的力量。',
+        costs: [
+          { item: '尼龍蕾絲', spec: '3×15 cm', cost: '12~15 元' },
+          { item: '水晶碎石', spec: '每個約 10g', cost: '15 元' },
+          { item: '配件', spec: '中國結、金屬環', cost: '15 元' },
+          { item: '車縫', spec: '少量價格較高', cost: '20 元' },
+          { item: '包裝', spec: '介紹卡、袋子等', cost: '20 元' }
+        ]
+      },
+      {
+        id: 'sleeve',
+        category: 'living',
+        categoryLabel: '生活器物',
+        name: '聯名杯套 — 生活的窗景',
+        subtitle: 'Window of Life Cup Sleeve',
+        price: 0,
+        priceText: '聯名企劃',
+        scale: '品牌聯名設計款',
+        unitCost: '—',
+        imageNotes: [
+          '主圖：簡報第 21 頁完整主視覺（含窗格構圖、自然植物、色彩層疊三大元素與正側面圖）'
+        ],
+        concept: '以「藝術源於生活，亦回歸生活」為設計核心，結合庶民美術館的空間印象與自然意象，將窗格、植物及藝術筆觸轉化為杯套的視覺語言。窗格象徵觀看藝術的不同視角，也代表美術館與日常生活之間的連結；植物則象徵創意的生長與文化的延續。',
+        quote: '以窗為景，以藝為伴，讓生活成為流動的美術館。',
+        costs: []
+      },
+      {
+        id: 'postcard',
+        category: 'paper',
+        categoryLabel: '紙品藝術',
+        name: '明信片 — 凝結：存盪於心的藝術',
+        subtitle: 'Crystallized Moments, Lingering Soul',
+        price: 0,
+        priceText: '聯名企劃',
+        scale: '品牌聯名設計款',
+        unitCost: '—',
+        imageNotes: [
+          '主圖：簡報第 19 頁明信片成品設計圖',
+          '靈感對照：簡報第 20 頁上方 吳冠德老師 2005 年畫作《歸途》'
+        ],
+        concept: '靈感源自三峽庶民美術館館長吳冠德老師 2005 年的畫作《歸途》為視覺基底，運用俐落的亮黃色細線框出視線焦點，如同在流動的時光中按下快門，將踏上歸途那一刻的寧靜「凝結」成永恆。在快節奏的數位時代，這張方寸紙卡不只是觀賞用的紀念品，更是一份能親手書寫、寄出的歸途漫信。',
+        quote: '以《歸途》「返家與心靈安頓」的意象為核心，讓明信片成為承載情感與記憶的實體載體。',
+        costs: []
+      }
+    ];
+
+    const MEMORY_PAIRS = [
+      { id: 'guitu', title: '《歸途》', year: '2005', note: '亮黃色細線框出視線焦點，傳遞返家與心靈安頓的寧靜。' },
+      { id: 'awakening', title: '《大覺醒》', year: '系列畫作', note: '層層交織的霧感藍綠色與光影，轉譯為混色羊毛圍巾。' },
+      { id: 'window', title: '《生活的窗景》', year: '聯名杯套', note: '以窗格構圖與植物意象，象徵觀看藝術的多元視角。' },
+      { id: 'guardian', title: '《自然光影》', year: '蕾絲御守', note: '結合三峽老街水晶礦石與鏤空蕾絲，化作日常守護。' }
+    ];
+
+    // =========================================================
+    // ROUTING & LOADING TRANSITION OVERLAY
+    // =========================================================
+    const routes = {
+      '/': 'page-home',
+      '/collection': 'page-collection',
+      '/story': 'page-story',
+      '/fieldwork': 'page-fieldwork',
+      '/about': 'page-about'
+    };
+
+    const routeLabels = {
+      '/': '獨庶一幟',
+      '/collection': '文創系列',
+      '/story': '品牌理念',
+      '/fieldwork': '踏查與學習',
+      '/about': '團隊致謝'
+    };
+
+    let loaderTimeout = null;
+    let currentRoute = null;
+
+    function applyRoute(route) {
+      const targetId = routes[route] || 'page-home';
+      currentRoute = route;
+      document.querySelectorAll('.page-view').forEach(sec => sec.classList.remove('active'));
+      const activeEl = document.getElementById(targetId);
+      if (activeEl) activeEl.classList.add('active');
+
+      document.querySelectorAll('[data-route]').forEach(link => {
+        if (link.classList.contains('nav-link')) {
+          link.classList.toggle('active', link.getAttribute('data-route') === route);
+        }
+      });
+
+      document.getElementById('mobile-menu').classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'instant' });
+      setTimeout(observeReveals, 60);
+    }
+
+    function navigateTo(route, withLoader = true) {
+      const validRoute = routes[route] ? route : '/';
+      if (!withLoader || currentRoute === null) {
+        applyRoute(validRoute);
+        return;
+      }
+
+      const loader = document.getElementById('page-loader');
+      const subtitle = document.getElementById('loader-subtitle');
+      const label = routeLabels[validRoute] || '獨庶一幟';
+      subtitle.textContent = `正在進入 ${label} 世界中…`;
+
+      // Reset progress bar animation cleanly
+      const fill = loader.querySelector('.loader-bar-fill');
+      fill.style.transition = 'none';
+      fill.style.width = '0%';
+      void fill.offsetWidth;
+      fill.style.transition = 'width 0.55s cubic-bezier(0.16, 1, 0.3, 1)';
+
+      loader.classList.add('active');
+      clearTimeout(loaderTimeout);
+      loaderTimeout = setTimeout(() => {
+        applyRoute(validRoute);
+        setTimeout(() => {
+          loader.classList.remove('active');
+        }, 160);
+      }, 540);
+    }
+
+    function handleHashChange() {
+      const hash = window.location.hash.replace('#', '') || '/';
+      const valid = routes[hash] ? hash : '/';
+      if (valid !== currentRoute) {
+        navigateTo(valid, currentRoute !== null);
+      }
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
+
+    // Ensure all [data-route] clicks trigger smooth transition even if hash matches
+    document.addEventListener('click', (e) => {
+      const routeLink = e.target.closest('[data-route]');
+      if (!routeLink) return;
+      e.preventDefault();
+      const targetRoute = routeLink.getAttribute('data-route');
+      if (window.location.hash !== `#${targetRoute}`) {
+        window.location.hash = targetRoute;
+      } else {
+        navigateTo(targetRoute, true);
+      }
+    });
+
+    // =========================================================
+    // SCROLL ANIMATIONS & PARALLAX
+    // =========================================================
+    let revealObserver;
+    function observeReveals() {
+      if (revealObserver) revealObserver.disconnect();
+      revealObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -30px 0px' });
+
+      document.querySelectorAll('.page-view.active .reveal-up, .page-view.active .reveal-left, .page-view.active .reveal-right, .page-view.active .reveal-scale')
+        .forEach(el => {
+          el.classList.remove('is-visible');
+          revealObserver.observe(el);
+        });
+    }
+
+    window.addEventListener('scroll', () => {
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (window.scrollY / docHeight) * 100 : 0;
+      document.getElementById('scroll-progress').style.width = `${progress}%`;
+
+      const heroEl = document.getElementById('hero-parallax');
+      if (heroEl && window.scrollY < 700) {
+        heroEl.style.transform = `translateY(${window.scrollY * 0.05}px)`;
+      }
+    });
+
+    // =========================================================
+    // COLLECTION RENDERING & FILTERING
+    // =========================================================
+    function renderCollection(category = 'all') {
+      const grid = document.getElementById('collection-grid');
+      const items = category === 'all' ? PRODUCTS : PRODUCTS.filter(p => p.category === category);
+      grid.innerHTML = items.map((p, idx) => `
+        <article class="bg-[#faf8f3] border border-[#36451e]/15 flex flex-col reveal-up is-visible" style="transition-delay:${idx * 0.06}s">
+          <div class="image-slot aspect-[4/3] cursor-pointer open-product-modal" data-product-id="${p.id}">
+            <i data-lucide="image" class="w-7 h-7 mb-2.5 text-[#4e5e31]"></i>
+            <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">PRODUCT IMAGE SLOT</span>
+            <div class="font-serif-tc text-base font-medium text-[#1a1c15] mb-1">${p.name}</div>
+            <p class="text-[11px] text-[#525747] leading-relaxed px-2">${p.imageNotes[0]}</p>
+          </div>
+          <div class="p-6 flex-1 flex flex-col">
+            <div class="flex items-center justify-between text-[11px] tracking-widest uppercase text-[#4e5e31] mb-2">
+              <span>${p.categoryLabel}</span>
+              <span class="font-medium text-[#36451e]">${p.priceText}</span>
+            </div>
+            <h3 class="font-serif-tc text-xl font-medium text-[#1a1c15] mb-2">${p.name}</h3>
+            <p class="text-xs text-[#525747] leading-relaxed mb-5 flex-1">${p.concept.slice(0, 72)}…</p>
+            <div class="flex items-center gap-2.5 pt-4 border-t border-[#36451e]/10">
+              <button type="button" class="open-product-modal flex-1 py-2.5 border border-[#36451e]/30 text-xs tracking-wider hover:bg-[#36451e] hover:text-[#f3efe6] transition-colors" data-product-id="${p.id}">
+                詳細理念與規格
+              </button>
+              ${p.price > 0 ? `
+                <button type="button" class="add-to-bag px-4 py-2.5 bg-[#36451e] text-[#f3efe6] text-xs tracking-wider hover:bg-[#263115] transition-colors" data-product-id="${p.id}">
+                  + 收藏
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        </article>
+      `).join('');
+      lucide.createIcons();
+    }
+
+    document.getElementById('collection-filters').addEventListener('click', (e) => {
+      const btn = e.target.closest('.filter-btn');
+      if (!btn) return;
+      document.querySelectorAll('.filter-btn').forEach(b => {
+        b.classList.remove('active', 'bg-[#36451e]', 'text-[#f3efe6]');
+        b.classList.add('border', 'border-[#36451e]/25', 'text-[#3d4234]');
+      });
+      btn.classList.add('active', 'bg-[#36451e]', 'text-[#f3efe6]');
+      btn.classList.remove('border', 'border-[#36451e]/25', 'text-[#3d4234]');
+      renderCollection(btn.dataset.category);
+    });
+
+    // =========================================================
+    // PRODUCT DETAIL MODAL
+    // =========================================================
+    function openProductModal(id) {
+      const p = PRODUCTS.find(item => item.id === id);
+      if (!p) return;
+      const modal = document.getElementById('product-modal');
+      const body = document.getElementById('product-modal-body');
+
+      body.innerHTML = `
+        <div class="space-y-6">
+          <div>
+            <div class="text-xs tracking-[0.2em] uppercase text-[#4e5e31] mb-1">${p.categoryLabel} · ${p.subtitle}</div>
+            <div class="flex flex-wrap items-baseline justify-between gap-4">
+              <h2 class="font-serif-tc text-2xl sm:text-3xl font-medium">${p.name}</h2>
+              <span class="font-serif-tc text-xl font-semibold text-[#36451e]">${p.priceText}</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 ${p.imageNotes.length > 1 ? 'sm:grid-cols-2' : ''} gap-4">
+            ${p.imageNotes.map((note, i) => `
+              <div class="image-slot aspect-[4/3] rounded-sm">
+                <i data-lucide="image" class="w-6 h-6 mb-2 text-[#4e5e31]"></i>
+                <span class="text-[10px] tracking-[0.2em] uppercase text-[#4e5e31] mb-1">IMAGE SLOT 0${i + 1}</span>
+                <p class="text-xs text-[#3d4234] leading-relaxed">${note}</p>
+              </div>
+            `).join('')}
+          </div>
+
+          <div class="space-y-3">
+            <h3 class="text-xs tracking-[0.18em] uppercase text-[#4e5e31] font-semibold">創作理念</h3>
+            <p class="text-sm text-[#3d4234] leading-relaxed">${p.concept}</p>
+            <blockquote class="border-l-2 border-[#36451e] pl-4 py-1 text-sm font-serif-tc text-[#1a1c15] italic">
+              ${p.quote}
+            </blockquote>
+          </div>
+
+          ${p.costs.length ? `
+            <div class="space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="text-xs tracking-[0.18em] uppercase text-[#4e5e31] font-semibold">製作規格與成本估算</h3>
+                <span class="text-xs text-[#525747]">${p.scale}｜合計單位成本 ${p.unitCost}</span>
+              </div>
+              <div class="border border-[#36451e]/15 bg-[#f3efe6]">
+                <table class="w-full text-xs text-left">
+                  <thead class="bg-[#eae4d5] text-[#1a1c15]">
+                    <tr>
+                      <th class="py-2.5 px-3 font-medium">項目</th>
+                      <th class="py-2.5 px-3 font-medium">規格</th>
+                      <th class="py-2.5 px-3 font-medium text-right">單價</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-[#36451e]/10">
+                    ${p.costs.map(c => `
+                      <tr>
+                        <td class="py-2 px-3 font-medium">${c.item}</td>
+                        <td class="py-2 px-3 text-[#525747]">${c.spec}</td>
+                        <td class="py-2 px-3 text-right">${c.cost}</td>
+                      </tr>
+                    `).join('')}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          ` : ''}
+
+          <div class="pt-4 flex justify-end gap-3 border-t border-[#36451e]/15">
+            ${p.price > 0 ? `
+              <button type="button" class="add-to-bag px-6 py-3 bg-[#36451e] text-[#f3efe6] text-xs tracking-wider hover:bg-[#263115]" data-product-id="${p.id}">
+                加入收藏袋 (${p.priceText})
+              </button>
+            ` : `
+              <span class="text-xs text-[#525747] py-2">此項目為展覽聯名設計企劃作品</span>
+            `}
+          </div>
+        </div>
+      `;
+
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      lucide.createIcons();
+    }
+
+    document.getElementById('close-product-modal').addEventListener('click', () => {
+      const modal = document.getElementById('product-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    });
+
+    // =========================================================
+    // COLLECTION BAG STATE
+    // =========================================================
+    const bag = {};
+
+    function updateBagUI() {
+      const entries = Object.entries(bag).filter(([, qty]) => qty > 0);
+      const totalCount = entries.reduce((sum, [, qty]) => sum + qty, 0);
+      document.getElementById('bag-count').textContent = totalCount;
+
+      const container = document.getElementById('bag-items');
+      let totalPrice = 0;
+
+      if (!entries.length) {
+        container.innerHTML = `
+          <div class="text-center py-16 text-[#525747] text-sm">
+            收藏袋目前是空的。<br />歡迎前往「文創系列」挑選喜歡的作品。
+          </div>
+        `;
+      } else {
+        container.innerHTML = entries.map(([id, qty]) => {
+          const p = PRODUCTS.find(x => x.id === id);
+          if (!p) return '';
+          totalPrice += p.price * qty;
+          return `
+            <div class="flex items-center justify-between gap-4 p-4 bg-[#f3efe6] border border-[#36451e]/15">
+              <div>
+                <div class="font-serif-tc text-sm font-medium">${p.name}</div>
+                <div class="text-xs text-[#525747] mt-0.5">${p.priceText} / 件</div>
+              </div>
+              <div class="flex items-center gap-2">
+                <button type="button" class="bag-qty-btn w-7 h-7 border border-[#36451e]/30 text-xs" data-id="${id}" data-delta="-1">-</button>
+                <span class="text-xs w-5 text-center">${qty}</span>
+                <button type="button" class="bag-qty-btn w-7 h-7 border border-[#36451e]/30 text-xs" data-id="${id}" data-delta="1">+</button>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      document.getElementById('bag-total').textContent = `NT$ ${totalPrice.toLocaleString()}`;
+    }
+
+    function openBag() {
+      const drawer = document.getElementById('bag-drawer');
+      drawer.classList.remove('hidden');
+      drawer.classList.add('flex');
+    }
+
+    document.getElementById('open-bag-btn').addEventListener('click', openBag);
+    document.getElementById('close-bag-btn').addEventListener('click', () => {
+      const drawer = document.getElementById('bag-drawer');
+      drawer.classList.add('hidden');
+      drawer.classList.remove('flex');
+    });
+    document.getElementById('clear-bag-btn').addEventListener('click', () => {
+      Object.keys(bag).forEach(k => delete bag[k]);
+      updateBagUI();
+    });
+
+    document.getElementById('bag-items').addEventListener('click', (e) => {
+      const btn = e.target.closest('.bag-qty-btn');
+      if (!btn) return;
+      const id = btn.dataset.id;
+      const delta = Number(btn.dataset.delta);
+      bag[id] = Math.max(0, (bag[id] || 0) + delta);
+      if (bag[id] === 0) delete bag[id];
+      updateBagUI();
+    });
+
+    // Global click delegation for product modals & add-to-bag
+    document.body.addEventListener('click', (e) => {
+      const addBtn = e.target.closest('.add-to-bag');
+      if (addBtn) {
+        const id = addBtn.dataset.productId;
+        bag[id] = (bag[id] || 0) + 1;
+        updateBagUI();
+        openBag();
+        return;
+      }
+
+      const modalTrigger = e.target.closest('.open-product-modal, .image-slot[data-product-id]');
+      if (modalTrigger) {
+        openProductModal(modalTrigger.dataset.productId);
+      }
+    });
+
+    // =========================================================
+    // MEMORY GAME: 庶民憶起拍 (SLIDE 18)
+    // =========================================================
+    let gameTimer = null;
+    let timeLeft = 60;
+    let gameActive = false;
+    let flippedCards = [];
+    let matchedCount = 0;
+
+    function renderMemoryGrid(cards) {
+      const grid = document.getElementById('memory-grid');
+      grid.innerHTML = cards.map((card, index) => `
+        <button type="button" class="memory-card aspect-[3/4] text-left" data-index="${index}" data-pair="${card.id}">
+          <div class="memory-card-inner">
+            <div class="memory-card-front bg-[#36451e] border border-[#f3efe6]/25 rounded-sm flex flex-col items-center justify-center p-3 text-center">
+              <span class="font-serif-tc text-lg text-[#f3efe6]/90 mb-1">獨庶一幟</span>
+              <span class="text-[10px] tracking-widest uppercase text-[#e8e2d3]/60">憶起拍</span>
+            </div>
+            <div class="memory-card-back bg-[#f3efe6] text-[#1a1c15] border border-[#c8962e] rounded-sm flex flex-col justify-between p-3.5">
+              <span class="text-[10px] tracking-widest uppercase text-[#4e5e31]">${card.year}</span>
+              <div>
+                <div class="font-serif-tc text-sm font-semibold mb-1">${card.title}</div>
+                <div class="text-[10px] text-[#525747]">（此處放置館長畫作圖卡）</div>
+              </div>
+            </div>
+          </div>
+        </button>
+      `).join('');
+    }
+
+    function startMemoryGame() {
+      clearInterval(gameTimer);
+      timeLeft = 60;
+      matchedCount = 0;
+      flippedCards = [];
+      gameActive = true;
+
+      document.getElementById('game-timer').textContent = '60s';
+      document.getElementById('game-score').textContent = '0';
+      document.getElementById('game-insight').textContent = '遊戲開始！請在 60 秒內翻開兩張相同的作品卡牌。';
+
+      const deck = [...MEMORY_PAIRS, ...MEMORY_PAIRS].sort(() => Math.random() - 0.5);
+      renderMemoryGrid(deck);
+
+      gameTimer = setInterval(() => {
+        timeLeft -= 1;
+        document.getElementById('game-timer').textContent = `${timeLeft}s`;
+        if (timeLeft <= 0) {
+          clearInterval(gameTimer);
+          gameActive = false;
+          document.getElementById('game-insight').textContent = `時間到！本次共配對 ${matchedCount} / 4 組作品，歡迎點擊重新洗牌再挑戰一次。`;
+        }
+      }, 1000);
+    }
+
+    document.getElementById('start-game-btn').addEventListener('click', startMemoryGame);
+
+    document.getElementById('memory-grid').addEventListener('click', (e) => {
+      const cardEl = e.target.closest('.memory-card');
+      if (!cardEl || !gameActive) return;
+      if (cardEl.classList.contains('flipped') || flippedCards.length >= 2) return;
+
+      cardEl.classList.add('flipped');
+      flippedCards.push(cardEl);
+
+      if (flippedCards.length === 2) {
+        const [c1, c2] = flippedCards;
+        if (c1.dataset.pair === c2.dataset.pair) {
+          matchedCount += 1;
+          document.getElementById('game-score').textContent = String(matchedCount);
+          const pairInfo = MEMORY_PAIRS.find(p => p.id === c1.dataset.pair);
+          document.getElementById('game-insight').textContent = `配對成功 ${pairInfo.title}！${pairInfo.note}`;
+          flippedCards = [];
+          if (matchedCount === 4) {
+            clearInterval(gameTimer);
+            gameActive = false;
+            document.getElementById('game-insight').textContent = `恭喜全數配對完成（剩餘 ${timeLeft} 秒）！歡迎和身旁夥伴聊聊右側的問題卡！`;
+          }
+        } else {
+          setTimeout(() => {
+            c1.classList.remove('flipped');
+            c2.classList.remove('flipped');
+            flippedCards = [];
+          }, 750);
+        }
+      }
+    });
+
+    // Mobile Menu Toggle
+    document.getElementById('mobile-menu-btn').addEventListener('click', () => {
+      document.getElementById('mobile-menu').classList.toggle('hidden');
+    });
+
+    // Init
+    window.addEventListener('DOMContentLoaded', () => {
+      renderCollection('all');
+      renderMemoryGrid([...MEMORY_PAIRS, ...MEMORY_PAIRS]);
+      updateBagUI();
+      handleHashChange();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
